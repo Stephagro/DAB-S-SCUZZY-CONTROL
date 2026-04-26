@@ -139,7 +139,7 @@ static struct
 } g_uiAutoCloseMsgBox;
 
 
-int g_pcaAddr = 0x3F;
+int g_pcaAddr = 0x20;
 
 bool g_controlBoardEnabled = false;
 bool g_displayEnabled = false;
