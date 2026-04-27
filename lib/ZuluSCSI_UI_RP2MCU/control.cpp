@@ -511,7 +511,23 @@ bool initControlBoardHardware()
 
     enableScreen(true);
     g_controlBoardEnabled = initControlBoardI2C();
-    return true;
+  
+    if (g_controlBoardEnabled)
+{
+    // Activer pull-up sur GPA0-GPA7
+    g_wire.beginTransmission(g_pcaAddr);
+    g_wire.write(0x0C);
+    g_wire.write(0xFF);
+    g_wire.endTransmission();
+
+    // Configurer GPA0-GPA7 en entrée
+    g_wire.beginTransmission(g_pcaAddr);
+    g_wire.write(0x00);  // IODIRA
+    g_wire.write(0xFF);  // tout en entrée
+    g_wire.endTransmission();
+}
+
+return true;
 }
 
 
