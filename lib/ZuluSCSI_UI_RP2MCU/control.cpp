@@ -417,7 +417,7 @@ uint8_t getValue()
   uint8_t input_byte = 0xFF;
 
   g_wire.beginTransmission(g_pcaAddr);
-  g_wire.write(0);
+  g_wire.write(0x12);
   g_wire.endTransmission();
 
   g_wire.requestFrom(g_pcaAddr, 1);
