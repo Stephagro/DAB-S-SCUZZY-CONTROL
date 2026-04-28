@@ -129,11 +129,10 @@ void drawScreenSaver()
                 {
                     static int gifFrame = 0;
                     static const uint8_t* frames[] = {
-                        Frame_1,
-                        Frame_2,
-                        Frame_3,
-                        Frame_4,
-                       
+                        frame_1,
+                        frame_2,
+                        frame_3,
+                        frame_4, 
                     };
                     g_display->drawBitmap(0, 0, frames[gifFrame], 128, 64, WHITE);
                     gifFrame = (gifFrame + 1) % 4;
