@@ -45,7 +45,7 @@ void MainScreen::init(int index)
   {
     _selectedDevice = NO_DEVICE_SELECTED;
     int i;
-    for (i = 0; i < S2S_MAX_TARGETS; i++)
+    for (i = 4; i < S2S_MAX_TARGETS; i++)
     {
       if (g_devices[i].Active)
       {
