@@ -133,9 +133,14 @@ void drawScreenSaver()
                         frame_2,
                         frame_3,
                         frame_4, 
+                        frame_5,
+                        frame_6,
+                        frame_7,
+                        frame_8, 
+                
                     };
                     g_display->drawBitmap(0, 0, frames[gifFrame], 128, 64, WHITE);
-                    gifFrame = (gifFrame + 1) % 4;
+                    gifFrame = (gifFrame + 1) % 8;
                     break;
                 }
 #ifdef ENABLE_HIGHER_LOAD_SCREEN_SAVERS
