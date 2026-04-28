@@ -125,26 +125,18 @@ void drawScreenSaver()
 
             switch(currentSelection)
             {
-                case SCREENSAVER_RANDOM_DVDSTYLE_LOGO:
+                case SCREENSAVER_GIF_ANIMATION:
                 {
-                    scrX = random(64);
-                    scrY = random(33);
-                    g_display->drawBitmap(scrX,scrY, icon_zuluscsi_mini,64,31 , WHITE);
-                    break;
-                }
-                case SCREENSAVER_BOUNCING_DVDSTYLE_LOGO:
-                {
-                    scrX += dirX?1:-1;
-                    scrY += dirY?1:-1;
-                    if (scrX > 62  || scrX<1)
-                    {
-                        dirX = !dirX;
-                    }
-                    if (scrY > 30  || scrY<1)
-                    {
-                        dirY = !dirY;
-                    }
-                    g_display->drawBitmap(scrX,scrY, icon_zuluscsi_mini,64,31 , WHITE);
+                    static int gifFrame = 0;
+                    static const uint8_t* frames[] = {
+                        Frame_1,
+                        Frame_2,
+                        Frame_3,
+                        Frame_4,
+                       
+                    };
+                    g_display->drawBitmap(0, 0, frames[gifFrame], 128, 64, WHITE);
+                    gifFrame = (gifFrame + 1) % 4;
                     break;
                 }
 #ifdef ENABLE_HIGHER_LOAD_SCREEN_SAVERS
@@ -304,8 +296,8 @@ void drawScreenSaver()
         int delay = 0;
         switch(currentSelection)
         {
-            case SCREENSAVER_RANDOM_DVDSTYLE_LOGO:
-                delay = 5000;
+            case SCREENSAVER_GIF_ANIMATION:
+                delay = 25;
                 break;
             
             case SCREENSAVER_BOUNCING_DVDSTYLE_LOGO:
