@@ -12,11 +12,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 **/
 
 #if defined(CONTROL_BOARD)
@@ -41,16 +41,29 @@ void MainScreen::init(int index)
   Screen::init(index);
 
   // Find first active scsi ID
-  if (index == SCREEN_ID_NO_PREVIOUS || index == SCREEN_ID_UNINITIALIZED || _selectedDevice == NO_DEVICE_SELECTED) // TODO just a test: _selectedDevice == -1? does it do anything when StateChange() called?
+  if (index == SCREEN_ID_NO_PREVIOUS || index == SCREEN_ID_UNINITIALIZED || _selectedDevice == NO_DEVICE_SELECTED)
   {
     _selectedDevice = NO_DEVICE_SELECTED;
     int i;
+    // MODIF : Demarre la recherche a partir de l'ID4 (lecteur CD-ROM)
     for (i = 4; i < S2S_MAX_TARGETS; i++)
     {
       if (g_devices[i].Active)
       {
         _selectedDevice = i;
         break;
+      }
+    }
+    // Si pas trouve a partir de 4, on cherche depuis le debut
+    if (_selectedDevice == NO_DEVICE_SELECTED)
+    {
+      for (i = 0; i < S2S_MAX_TARGETS; i++)
+      {
+        if (g_devices[i].Active)
+        {
+          _selectedDevice = i;
+          break;
+        }
       }
     }
   }
@@ -157,14 +170,8 @@ void MainScreen::shortEjectPress()
   switch(_deviceMap->BrowseMethod)
   {
     case BROWSE_METHOD_IMDDIR:
-      if (_deviceMap->HasDirs && ((g_cacheActive && _deviceMap->BrowseScreenType == 0) || (!g_cacheActive)))
-      {
-          changeScreen(SCREEN_BROWSE, _selectedDevice);
-      }
-      else
-      {
-          changeScreen(SCREEN_BROWSE_FLAT, _selectedDevice);
-      }
+      // MODIF : Toujours afficher la liste plate directement
+      changeScreen(SCREEN_BROWSE_FLAT, _selectedDevice);
       break;
     case BROWSE_METHOD_IMGX:
     case BROWSE_METHOD_USE_PREFIX:
@@ -234,7 +241,7 @@ void MainScreen::longEjectPress()
 
 void MainScreen::rotaryChange(int direction)
 {
-  if (_selectedDevice == NO_DEVICE_SELECTED) // there aren't any, so just return (it would have been set to something other than -1 if there were)
+  if (_selectedDevice == NO_DEVICE_SELECTED)
   {
     return;
   }
