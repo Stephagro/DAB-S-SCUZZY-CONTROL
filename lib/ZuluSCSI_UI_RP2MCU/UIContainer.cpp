@@ -23,14 +23,24 @@
 #include "NoControlsErrorScreen.h"
 #include "UIContainer.h"
 
-// FORCE LE DELAI ICI (10 secondes)
+// TES PARAMÈTRES PERSONNELS
 #undef SCREENSAVER_DELAY
-#define SCREENSAVER_DELAY 10000
+#define SCREENSAVER_DELAY 10000 
 
 UIContainer* g_uiContainer = NULL;
 Screen* g_activeScreen = NULL;
 SCREEN_TYPE g_previousScreen = SCREEN_NONE;
 int g_previousIndex = 0;
+
+// Cette fonction manquait et faisait tout planter
+Screen* GetScreen(SCREEN_TYPE type) {
+    switch (type) {
+        case SCREEN_SPLASH:      return new SplashScreen();
+        case SCREEN_MAIN:        return new MainScreen();
+        case SCREEN_SETTINGS:    return new SettingsScreen();
+        default:                 return new MainScreen(); 
+    }
+}
 
 UIContainer::UIContainer()
 {
@@ -46,11 +56,9 @@ void UIContainer::update()
         g_activeScreen->update();
     }
 
-    // Gestion du Screen Saver
     if (!_screenSaverActive && (millis() - _lastActivityTime > SCREENSAVER_DELAY))
     {
         _screenSaverActive = true;
-        // Ici le logo s'active
     }
 }
 
@@ -60,35 +68,27 @@ void UIContainer::activity()
     if (_screenSaverActive)
     {
         _screenSaverActive = false;
-        // Ici on revient au menu
     }
 }
 
-// Nettoyage des Switch pour la compilation
 const char* GetScreenName(SCREEN_TYPE type)
 {
     switch(type)
     {
         case SCREEN_MAIN:        return "Main";
         case SCREEN_SETTINGS:    return "Settings";
-        case SCREEN_INFO:        return "Info (1/3)";
+        case SCREEN_INFO:        return "Info";
         case SCREEN_BROWSE:      return "Browse";
-        case MESSAGE_BOX:        return "Message Box";
-        case SCREEN_INSERT_SD_CARD: return "Insert SD"; // Correction compil
-        default:                 return "Unknown";
+        default:                 return "Menu";
     }
 }
 
 void changeScreen(SCREEN_TYPE type, int index)
 {
-    if (type == SCREEN_NONE)
-    {
-        g_activeScreen = NULL;
-        return;
+    if (g_activeScreen != NULL) {
+        delete g_activeScreen;
     }
     g_activeScreen = GetScreen(type);
-    if (index == -1) index = g_previousIndex;
-    g_activeScreen->init(index);
 }
 
 #endif
